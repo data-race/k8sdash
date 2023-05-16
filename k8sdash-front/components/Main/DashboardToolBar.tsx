@@ -4,22 +4,23 @@ import { Box, IconButton, Toolbar, Typography } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 
 import { ChevronLeft, Terminal } from "@mui/icons-material";
-import { menuWidth } from "./ResourceMenuDrawer";
 
 interface ToolbarProps {
-  menuStatus: boolean;
+  menuWidth: number
+  openMenu: boolean;
   openMenuDrawerHandler: Function;
   closeMenuDrawerHandler: Function;
-  terminalStatus: boolean;
+  openTerminal: boolean;
   openTerminalDrawerHandler: Function;
   closeTerminalDrawerHandler: Function;
 }
 
 export default function DashboardToolbar({
-  menuStatus,
+  menuWidth,
+  openMenu,
   openMenuDrawerHandler,
   closeMenuDrawerHandler,
-  terminalStatus,
+  openTerminal,
   openTerminalDrawerHandler,
   closeTerminalDrawerHandler,
 }: ToolbarProps) {
@@ -33,7 +34,7 @@ export default function DashboardToolbar({
         position="fixed"
         className="bg-blue-950"
         style={{
-          ...(menuStatus && {
+          ...(openMenu && {
             width: `calc(100% - ${menuWidth}px)`,
             transition: `width ease-out .3s`,
           }),
@@ -47,14 +48,14 @@ export default function DashboardToolbar({
             aria-label="menu"
             sx={{ mr: 2 }}
             onClick={() => {
-              if (!menuStatus) {
+              if (!openMenu) {
                 openMenuDrawerHandler();
               } else {
                 closeMenuDrawerHandler();
               }
             }}
           >
-            {menuStatus ? <ChevronLeft /> : <MenuIcon />}
+            {openMenu ? <ChevronLeft /> : <MenuIcon />}
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             My Kubernetes DashBoard
@@ -63,7 +64,7 @@ export default function DashboardToolbar({
             color="inherit"
             size="large"
             onClick={() => {
-              if (!terminalStatus) {
+              if (!openTerminal) {
                 openTerminalDrawerHandler();
               } else {
                 closeTerminalDrawerHandler();

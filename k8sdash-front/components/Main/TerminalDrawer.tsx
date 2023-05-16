@@ -1,15 +1,17 @@
 import { Drawer } from "antd";
-import { menuWidth } from "./ResourceMenuDrawer";
+
 
 interface TerminalDrawerProps {
+  menuWidth: number,
   openTerminal: boolean;
   openMenu: boolean;
-  closeTerminalDrawerHandler: Function;
+  closeTerminalDrawerHandler: ()=>void;
 }
 
-const terminalHeight = 350;
+const terminalHeight = 380;
 
 export default function TerminalDrawer({
+  menuWidth,
   openTerminal,
   openMenu,
   closeTerminalDrawerHandler,
@@ -25,6 +27,7 @@ export default function TerminalDrawer({
       maskClosable={false}
       key="bottom"
       height={terminalHeight}
+      getContainer={false}
       style={{
         ...(openMenu && {
           width: `calc(100% - ${menuWidth}px)`,
@@ -33,9 +36,7 @@ export default function TerminalDrawer({
         })
       }}
     >
-      <p >
-        There will be a embeded terminal.
-      </p>
+      {/* <WebTerminal/> */}
     </Drawer>
   );
 }

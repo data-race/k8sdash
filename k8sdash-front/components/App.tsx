@@ -1,13 +1,52 @@
 "use client";
 
+import { Computer, Hub, Key, Storage } from "@mui/icons-material";
 import { useState } from "react";
-import DashboardToolbar from "./DashboardToolBar";
-import ResourceMenuDrawer from "./ResourceMenuDrawer";
-import TerminalDrawer from "./TerminalDrawer";
+import Main from "./Main/Main";
+import ResourceMenuDrawer, { menuWidth } from "./ResourceMenuDrawer";
+
+export interface ResourceGroup {
+  category: string;
+  icon: () => React.ReactNode;
+  resources: {
+    kind: string;
+  }[];
+}
+
+const ResourceGroups: ResourceGroup[] = [
+  {
+    category: "Computation",
+    icon: () => <Computer />,
+    resources: [
+      { kind: "Pod" },
+      { kind: "Deployment" },
+      { kind: "StatefulSet" },
+    ],
+  },
+  {
+    category: "Network",
+    icon: () => <Hub />,
+    resources: [{ kind: "Service" }, { kind: "Ingress" }],
+  },
+  {
+    category: "Storage",
+    icon: () => <Storage />,
+    resources: [
+      { kind: "StorageClass" },
+      { kind: "PersistentVolume" },
+      { kind: "PersistentVolumeClaim" },
+    ],
+  },
+  {
+    category: "Configuration",
+    icon: () => <Key />,
+    resources: [{ kind: "Secret" }, { kind: "ConfigMap" }],
+  },
+];
 
 export default function App() {
   const [openMenu, setOpenMenu] = useState(false);
-  const [openTerminal, setOpenTerminal] = useState(true);
+  const [selectedResource, setSelectResource] = useState("Pod");
 
   const handleMenuOpen = () => {
     setOpenMenu(true);
@@ -17,26 +56,22 @@ export default function App() {
     setOpenMenu(false);
   };
 
-  const handleTerminalOpen = () => {
-    setOpenTerminal(true);
-  };
-
-  const handleTerminalClose = () => {
-    setOpenTerminal(false);
-  };
-
   return (
     <div className="flex flex-col items-center justify-between py-20">
-      <DashboardToolbar
-        menuStatus={openMenu}
-        openMenuDrawerHandler={handleMenuOpen}
-        closeMenuDrawerHandler={handleMenuClose}
-        terminalStatus={openTerminal}
-        openTerminalDrawerHandler={handleTerminalOpen}
-        closeTerminalDrawerHandler={handleTerminalClose}
+      <ResourceMenuDrawer
+        openMenu={openMenu}
+        resourceGroups={ResourceGroups}
+        handleClickItem={(item: string) => {
+          setSelectResource(item);
+        }}
       />
-      <ResourceMenuDrawer openMenu={openMenu} />
-      <TerminalDrawer openTerminal={openTerminal} openMenu={openMenu} closeTerminalDrawerHandler={handleTerminalClose}/>
+      <Main
+        openMenu={openMenu}
+        menuWidth={menuWidth}
+        selectedResource={selectedResource}
+        openMenuHandler={handleMenuOpen}
+        closeMenuHandler={handleMenuClose}
+      />
     </div>
   );
 }
