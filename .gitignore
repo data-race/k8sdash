@@ -1,0 +1,35 @@
+# Golang (Go) build files
+*.exe
+*.test
+*.log
+*.out
+main
+
+# Go cache and dependencies
+/go/
+/go.mod
+/go.sum
+/vendor/
+/Godeps/
+
+# macOS and system files
+.DS_Store
+.Trashes
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+*.swp
+
+# Next.js
+/.next/
+/out/
+
+# Node.js dependencies (optional, remove if you use Yarn)
+/node_modules/
+
+# IDEA-style IDE folders (optional, remove if not using JetBrains IntelliJ IDEs)
+.idea/
+*.iml
+*.iws
+*.ipr

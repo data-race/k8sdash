@@ -1,0 +1,9 @@
+allowedhostname:
+  - "localhost"
+  - "127.0.0.1"
+command: /bin/zsh
+serveraddr: "localhost"
+serverport: 12333
+pathterm: "/term"
+termbuffersize: 1024
+loglevel: debug
