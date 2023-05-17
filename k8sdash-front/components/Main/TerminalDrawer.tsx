@@ -1,4 +1,5 @@
 import { Drawer } from "antd";
+import WebTerminal from "./WebTerminal";
 
 
 interface TerminalDrawerProps {
@@ -36,7 +37,7 @@ export default function TerminalDrawer({
         })
       }}
     >
-      {/* <WebTerminal/> */}
+      <WebTerminal/>
     </Drawer>
   );
 }

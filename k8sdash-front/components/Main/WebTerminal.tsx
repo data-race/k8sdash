@@ -1,23 +1,15 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { Terminal } from "xterm";
 import { AttachAddon } from "xterm-addon-attach";
 import "xterm/css/xterm.css";
 
-const socketURL = "ws://127.0.0.1:4000/socket/";
-function WebTerminal() {
-  //初始化当前系统环境，返回终端的 pid，标识当前终端的唯一性
-  const initSysEnv = async (term: Terminal) =>
-    await axios
-      .post("http://127.0.0.1:4000/terminal")
-      .then((res) => res.data)
-      .catch((err) => {
-        throw new Error(err);
-      });
+// Refer: https://juejin.cn/post/6918911964009725959
 
+const socketURL = "ws://127.0.0.1:11223/term";
+export default function WebTerminal() {
   useEffect(() => {
     var term = new Terminal({
-      fontFamily: 'Menlo, Monaco, "Courier New", monospace',
+      fontFamily: 'MesloLGS NF',
       fontWeight: 400,
       fontSize: 14,
       rows: 200,
@@ -25,13 +17,9 @@ function WebTerminal() {
     //@ts-ignore
     term.open(document.getElementById("terminal"));
     term.focus();
-    async function asyncInitSysEnv() {
-      const pid = await initSysEnv(term),
-        ws = new WebSocket(socketURL + pid),
-        attachAddon = new AttachAddon(ws);
-      term.loadAddon(attachAddon);
-    }
-    asyncInitSysEnv();
+    const ws = new WebSocket(socketURL);
+    const attachAddon = new AttachAddon(ws);
+    term.loadAddon(attachAddon);
     return () => {
       //组件卸载，清除 Terminal 实例
       term.dispose();
@@ -40,4 +28,3 @@ function WebTerminal() {
   return <div id="terminal"></div>;
 }
 
-export default WebTerminal;

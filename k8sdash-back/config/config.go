@@ -3,18 +3,22 @@ package config
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"k8s.io/apimachinery/pkg/util/yaml"
 )
 
 type Config struct {
-	AllowedHostName []string
-	Command         string
-	ServerAddr      string
-	ServerPort      int
-	PathTerm        string
-	TermBufferSize  int
-	LogLevel        string
+	AllowedHostNames     []string
+	Command              string
+	Args                 []string
+	ServerAddr           string
+	ServerPort           int
+	PathTerm             string
+	TermBufferSize       int
+	LogLevel             string
+	ConnectionErrorLimit int
+	KeepAlivePingTimeout time.Duration
 }
 
 var Conf Config

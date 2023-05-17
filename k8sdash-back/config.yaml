@@ -1,9 +1,14 @@
-allowedhostname:
+allowedhostnames:
   - "localhost"
   - "127.0.0.1"
-command: /bin/zsh
+command: "/bin/zsh"
+args:
+  - "-c"
+  - "cd ~; exec zsh"
 serveraddr: "localhost"
-serverport: 12333
+serverport: 11223
 pathterm: "/term"
 termbuffersize: 1024
 loglevel: debug
+connectionerrorlimit: 10
+keepalivepingtimeout: 50

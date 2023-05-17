@@ -28,6 +28,7 @@
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4",
     "xterm": "^5.1.0",
-    "xterm-addon-attach": "^0.8.0"
+    "xterm-addon-attach": "^0.8.0",
+    "xterm-for-react": "^1.0.4"
   }
 }
