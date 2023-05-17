@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DashboardToolbar from "./DashboardToolBar";
 import DataPanel from "./DataPanel";
-import TerminalDrawer from "./TerminalDrawer";
+import ToolDrawer from "./ToolDrawer/ToolDrawer";
 
 interface MainProps {
   openMenu: boolean;
@@ -12,13 +12,13 @@ interface MainProps {
 }
 
 export default function Main(props: MainProps) {
-  const [openTerminal, setOpenTerminal] = useState(false);
+  const [openTool, setOpenTool] = useState(false);
 
-  const handleOpenTerminal = () => {
-    setOpenTerminal(true);
+  const handleOpenTool = () => {
+    setOpenTool(true);
   };
-  const handleCloseTerminal = () => {
-    setOpenTerminal(false);
+  const handleCloseTool = () => {
+    setOpenTool(false);
   };
   return (
     <main>
@@ -27,16 +27,16 @@ export default function Main(props: MainProps) {
         openMenu={props.openMenu}
         openMenuDrawerHandler={props.openMenuHandler}
         closeMenuDrawerHandler={props.closeMenuHandler}
-        openTerminal={openTerminal}
-        openTerminalDrawerHandler={handleOpenTerminal}
-        closeTerminalDrawerHandler={handleCloseTerminal}
+        openTerminal={openTool}
+        openTerminalDrawerHandler={handleOpenTool}
+        closeTerminalDrawerHandler={handleCloseTool}
       />
       <DataPanel openMenu={props.openMenu} menuWidth={props.menuWidth} />
-      <TerminalDrawer
+      <ToolDrawer
         menuWidth={props.menuWidth}
-        openTerminal={openTerminal}
+        openTool={openTool}
         openMenu={props.openMenu}
-        closeTerminalDrawerHandler={handleCloseTerminal}
+        closeToolDrawerHandler={handleCloseTool}
       />
     </main>
   );

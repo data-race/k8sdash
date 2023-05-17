@@ -3,7 +3,7 @@ import { Box, IconButton, Toolbar, Typography } from "@mui/material";
 
 import MuiAppBar from "@mui/material/AppBar";
 
-import { ChevronLeft, Terminal } from "@mui/icons-material";
+import { ChevronLeft, HomeRepairService } from "@mui/icons-material";
 
 interface ToolbarProps {
   menuWidth: number
@@ -71,7 +71,7 @@ export default function DashboardToolbar({
               }
             }}
           >
-            <Terminal />
+          <HomeRepairService/>
           </IconButton>
         </Toolbar>
       </MuiAppBar>
