@@ -1,6 +1,8 @@
-import { Space, Table, Tag } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import Paragraph from "antd/es/typography/Paragraph";
+import { HomeOutlined } from "@mui/icons-material";
+import { Breadcrumb, Table, Tag } from "antd";
+import type { ColumnsType, TableProps } from "antd/es/table";
+import { FilterValue, SorterResult } from "antd/es/table/interface";
+import { useState } from "react";
 
 interface DataType {
   key: string;
@@ -9,55 +11,6 @@ interface DataType {
   address: string;
   tags: string[];
 }
-
-const columns: ColumnsType<DataType> = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
 
 const data: DataType[] = [
   {
@@ -117,11 +70,103 @@ interface DataPanelProps {
 }
 
 export default function DataPanel(props: DataPanelProps) {
+  const [filteredInfo, setFilteredInfo] = useState<
+    Record<string, FilterValue | null>
+  >({});
+  const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
+
+  const handleChange: TableProps<DataType>["onChange"] = (
+    pagination,
+    filters,
+    sorter
+  ) => {
+    console.log("Various parameters", pagination, filters, sorter);
+    setFilteredInfo(filters);
+    setSortedInfo(sorter as SorterResult<DataType>);
+  };
+
+  const clearFilters = () => {
+    setFilteredInfo({});
+  };
+
+  const clearAll = () => {
+    setFilteredInfo({});
+    setSortedInfo({});
+  };
+
+  const setAgeSort = () => {
+    setSortedInfo({
+      order: "descend",
+      columnKey: "age",
+    });
+  };
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      filters: [
+        { text: "Joe", value: "Joe" },
+        { text: "Jim", value: "Jim" },
+      ],
+      filteredValue: filteredInfo.name || null,
+      onFilter: (value: string | number | boolean, record) =>
+        record.name.includes(value.toString()),
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortOrder: sortedInfo.columnKey === "name" ? sortedInfo.order : null,
+      ellipsis: true,
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      sorter: (a, b) => a.age - b.age,
+      sortOrder: sortedInfo.columnKey === "age" ? sortedInfo.order : null,
+      ellipsis: true,
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      filters: [
+        { text: "London", value: "London" },
+        { text: "New York", value: "New York" },
+      ],
+      filteredValue: filteredInfo.address || null,
+      onFilter: (value: string | number | boolean, record) =>
+        record.address.includes(value.toString()),
+      sorter: (a, b) => a.address.length - b.address.length,
+      sortOrder: sortedInfo.columnKey === "address" ? sortedInfo.order : null,
+      ellipsis: true,
+    },
+    {
+      title: "Tags",
+      key: "tags",
+      dataIndex: "tags",
+      render: (_, { tags }) => (
+        <>
+          {tags.map((tag) => {
+            let color = tag.length > 5 ? "geekblue" : "green";
+            if (tag === "loser") {
+              color = "volcano";
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+  ];
+
   return (
-    // 
+    //
     <main
       style={{
-        paddingLeft:"30px",
+        paddingLeft: "30px",
         paddingRight: "30px",
         paddingTop: "30px",
         ...(props.openMenu && {
@@ -131,24 +176,34 @@ export default function DataPanel(props: DataPanelProps) {
         }),
       }}
     >
-      <Paragraph>
-        - error ReferenceError: self is not defined at __webpack_require__
-        (/Volumes/WD-SN570/Workspace/k8sdash/k8sdash-front/.next/server/webpack-runtime.js:33:43)
-        at eval (./components/Main/WebTerminal.tsx:10:63) at
-        (sc_client)/./components/Main/WebTerminal.tsx
-        (/Volumes/WD-SN570/Workspace/k8sdash/k8sdash-front/.next/server/app/page.js:151159:1)
-        at __webpack_require__
-        (/Volumes/WD-SN570/Workspace/k8sdash/k8sdash-front/.next/server/webpack-runtime.js:33:43)
-        at eval (./components/Main/TerminalDrawer.tsx:8:70) at
-        (sc_client)/./components/Main/TerminalDrawer.tsx
-        (/Volumes/WD-SN570/Workspace/k8sdash/k8sdash-front/.next/server/app/page.js:151148:1)
-        at __webpack_require__
-        (/Volumes/WD-SN570/Workspace/k8sdash/k8sdash-front/.next/server/webpack-runtime.js:33:43)
-        at eval (./components/Main/Main.tsx:10:73) at
-        (sc_client)/./components/Main/Main.tsx
-        (/Volumes/WD-SN570/Workspace/k8sdash/k8sdash-front/.next/server/app/page.js:151137:1)
-      </Paragraph>
-      <Table columns={columns} dataSource={data} />
+      <Breadcrumb
+        items={[
+          {
+            href: "",
+            title: <HomeOutlined />,
+          },
+          {
+            href: "",
+            title: (
+              <>
+                <span>Resources</span>
+              </>
+            ),
+          },
+          {
+            title: "Pod",
+          },
+        ]}
+
+        style={{fontSize: 20}}
+      />
+
+      <Table
+        columns={columns}
+        dataSource={data}
+        onChange={handleChange}
+        style={{ width: "calc(90%)", paddingLeft: "calc(5%)", paddingTop: "20px"}}
+      />
     </main>
   );
 }
