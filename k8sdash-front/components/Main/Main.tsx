@@ -22,16 +22,22 @@ export default function Main(props: MainProps) {
   };
   return (
     <main>
-      <DashboardToolbar
-        menuWidth={props.menuWidth}
-        openMenu={props.openMenu}
-        openMenuDrawerHandler={props.openMenuHandler}
-        closeMenuDrawerHandler={props.closeMenuHandler}
-        openTerminal={openTool}
-        openTerminalDrawerHandler={handleOpenTool}
-        closeTerminalDrawerHandler={handleCloseTool}
-      />
-      <DataPanel openMenu={props.openMenu} menuWidth={props.menuWidth} />
+      <div>
+        <DashboardToolbar
+          menuWidth={props.menuWidth}
+          openMenu={props.openMenu}
+          openMenuDrawerHandler={props.openMenuHandler}
+          closeMenuDrawerHandler={props.closeMenuHandler}
+          openTerminal={openTool}
+          openTerminalDrawerHandler={handleOpenTool}
+          closeTerminalDrawerHandler={handleCloseTool}
+        />
+        <DataPanel
+          openMenu={props.openMenu}
+          menuWidth={props.menuWidth}
+          selectedResource={props.selectedResource}
+        />
+      </div>
       <ToolDrawer
         menuWidth={props.menuWidth}
         openTool={openTool}
