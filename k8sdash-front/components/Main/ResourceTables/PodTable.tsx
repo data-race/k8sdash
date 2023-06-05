@@ -1,14 +1,15 @@
 import { Table, TableProps, Tag } from "antd";
 import {
-    ColumnsType,
-    FilterValue,
-    SorterResult,
+  ColumnsType,
+  FilterValue,
+  SorterResult,
 } from "antd/es/table/interface";
 import { CSSProperties, useState } from "react";
-import { mockPods } from "./mock_data";
+import { mockData } from "./mock_data";
+import getNamespaceFilters from "./utils";
 
-export interface PodTableItemType {
-  key: string;
+interface PodTableItemType {
+  key: string|number;
   name: string;
   namespace: string;
   status: string;
@@ -53,9 +54,7 @@ export default function PodTable(props: PodTableProps) {
       title: "Namespace",
       dataIndex: "namespace",
       key: "namespace",
-      filters: [
-        { text: "kube-system", value: "kube-system" }, //TODO
-      ],
+      filters: getNamespaceFilters(mockData.pods),
       filteredValue: filteredInfo.namespace || null,
       onFilter: (value: string | number | boolean, record) =>
         record.namespace === value.toString(),
@@ -112,7 +111,7 @@ export default function PodTable(props: PodTableProps) {
   return (
     <Table
         columns={columns}
-        dataSource={mockPods}
+        dataSource={mockData.pods}
         onChange={handleChange}
         style={props.style}
         pagination={{pageSize:8}}

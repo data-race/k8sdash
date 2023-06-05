@@ -1,5 +1,6 @@
 import { HomeOutlined } from "@mui/icons-material";
 import { Breadcrumb } from "antd";
+import DeploymentTable from "./ResourceTables/DeploymentTable";
 import PodTable from "./ResourceTables/PodTable";
 
 interface DataPanelProps {
@@ -9,6 +10,26 @@ interface DataPanelProps {
 }
 
 export default function DataPanel(props: DataPanelProps) {
+
+  const resourceTable = ():JSX.Element => {
+    switch(props.selectedResource) {
+      case 'Pod':
+        return <PodTable style={{
+          width: "calc(90%)",
+          paddingLeft: "calc(5%)",
+          paddingTop: "20px",
+        }}/>
+      case 'Deployment':
+        return <DeploymentTable/>
+      default:
+        return <PodTable style={{
+          width: "calc(90%)",
+          paddingLeft: "calc(5%)",
+          paddingTop: "20px",
+        }}/>
+    }
+  }
+
   return (
     //
     <main
@@ -41,14 +62,8 @@ export default function DataPanel(props: DataPanelProps) {
         ]}
         style={{ fontSize: 20 }}
       />
-
-      <PodTable
-        style={{
-          width: "calc(90%)",
-          paddingLeft: "calc(5%)",
-          paddingTop: "20px",
-        }}
-      />
+      {resourceTable()}
     </main>
   );
 }
+

@@ -1,121 +1,35 @@
-import { PodTableItemType } from "./PodTable"
+var Mock = require('mockjs')
 
-export const mockPods: PodTableItemType[] = [
-    {
-        key: 'kube-system/api-service',
-        name: 'api-service',
-        namespace: 'kube-system',
-        status: 'Running',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 0,
-    },
-    {
-        key: 'kube-system/kube-proxy',
-        name: 'kube-proxy',
-        namespace: 'kube-system',
-        status: 'Running',
-        image: 'kube-proxy:latest',
-        age: '3days',
-        restarts: 0,
-    },
-    {
-        key: 'kube-system/etcd',
-        name: 'etcd',
-        namespace: 'kube-system',
-        status: 'Running',
-        image: 'etcd:latest',
-        age: '100m',
-        restarts: 3,
-    },
-    {
-        key: 'foo/bar',
-        name: 'bar',
-        namespace: 'foo',
-        status: 'Pending',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar2',
-        name: 'bar2',
-        namespace: 'foo',
-        status: 'Succeeded',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar3',
-        name: 'bar3',
-        namespace: 'foo',
-        status: 'Failed',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar4',
-        name: 'bar4',
-        namespace: 'foo',
-        status: 'Unknown',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar5',
-        name: 'bar2',
-        namespace: 'foo',
-        status: 'Succeeded',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar6',
-        name: 'bar3',
-        namespace: 'foo',
-        status: 'Failed',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar7',
-        name: 'bar4',
-        namespace: 'foo',
-        status: 'Unknown',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar8',
-        name: 'bar2',
-        namespace: 'foo',
-        status: 'Succeeded',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar9',
-        name: 'bar3',
-        namespace: 'foo',
-        status: 'Failed',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-    {
-        key: 'foo/bar10',
-        name: 'bar4',
-        namespace: 'foo',
-        status: 'Unknown',
-        image: 'api-service:latest',
-        age: '100m',
-        restarts: 5,
-    },
-]
+function getRandomInt(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+export const mockData = Mock.mock({
+    'pods|15':[{
+        'key|+1': 1,
+        'name|1':['foo','bar','hello', 'world'],
+        'namespace|1': ['foo', 'bar', 'kube-system', 'core'],
+        'status|1': ['Running', 'Pending', 'Failed', 'Succeeded', 'Unknown'],
+        'age|10-100':50,
+        'restarts|0-20':10,
+        'image|3': /\w\W\s\S\d\D-/,
+    }],
+    'deployments|15':[{
+        'key|+1': 1,
+        'name|1':['foo','bar','hello', 'world'],
+        'namespace|1': ['foo', 'bar', 'kube-system', 'core'],
+        'desired':'@integer(3, 7)',
+        'available':function(){
+            //@ts-ignore
+            return this.desired - getRandomInt(0,3)
+        },
+        //@ts-ignore
+        'healthy':function() {
+            //@ts-ignore
+            return this.avaiable === this.desired
+        } 
+    }]
+})
+
