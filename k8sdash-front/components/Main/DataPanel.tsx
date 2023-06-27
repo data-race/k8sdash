@@ -9,24 +9,22 @@ interface DataPanelProps {
   selectedResource: string;
 }
 
+const tableStyle = {
+  width: "calc(90%)",
+  paddingLeft: "calc(5%)",
+  paddingTop: "20px",
+}
+
 export default function DataPanel(props: DataPanelProps) {
 
   const resourceTable = ():JSX.Element => {
     switch(props.selectedResource) {
       case 'Pod':
-        return <PodTable style={{
-          width: "calc(90%)",
-          paddingLeft: "calc(5%)",
-          paddingTop: "20px",
-        }}/>
+        return <PodTable style={tableStyle}/>
       case 'Deployment':
-        return <DeploymentTable/>
+        return <DeploymentTable style={tableStyle}/>
       default:
-        return <PodTable style={{
-          width: "calc(90%)",
-          paddingLeft: "calc(5%)",
-          paddingTop: "20px",
-        }}/>
+        return <PodTable style={tableStyle}/>
     }
   }
 

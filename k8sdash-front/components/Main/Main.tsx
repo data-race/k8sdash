@@ -20,6 +20,7 @@ export default function Main(props: MainProps) {
   const handleCloseTool = () => {
     setOpenTool(false);
   };
+
   return (
     <main>
       <div>
@@ -31,6 +32,8 @@ export default function Main(props: MainProps) {
           openTerminal={openTool}
           openTerminalDrawerHandler={handleOpenTool}
           closeTerminalDrawerHandler={handleCloseTool}
+          // TODO
+          handleContextChange={(newContext)=>{}}
         />
         <DataPanel
           openMenu={props.openMenu}

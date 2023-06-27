@@ -15,6 +15,7 @@ type Config struct {
 	ServerAddr           string
 	ServerPort           int
 	PathTerm             string
+	PathAPI              string
 	TermBufferSize       int
 	LogLevel             string
 	ConnectionErrorLimit int

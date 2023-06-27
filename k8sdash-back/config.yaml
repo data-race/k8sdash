@@ -8,6 +8,7 @@ args:
 serveraddr: "localhost"
 serverport: 11223
 pathterm: "/term"
+pathapi: "api/v1/"
 termbuffersize: 1024
 loglevel: debug
 connectionerrorlimit: 10

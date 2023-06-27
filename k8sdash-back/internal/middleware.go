@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -25,5 +27,22 @@ func GinLogger(logger *zap.Logger) gin.HandlerFunc {
 			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
 			zap.Duration("cost", cost),
 		)
+	}
+}
+
+func ErrorHandlingMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next() // execute the request handler
+
+		// Check if there was an error during the execution of the handler
+		if len(c.Errors) > 0 {
+			// Iterate through each error and log it
+			for _, err := range c.Errors {
+				fmt.Println(err.Error())
+			}
+
+			// Send error response to the client
+			c.JSON(http.StatusBadRequest, gin.H{"error": c.Errors.Errors()})
+		}
 	}
 }
