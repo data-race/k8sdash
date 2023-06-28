@@ -1,25 +1,27 @@
+import fetchPod from "@/lib/api/pod";
 import { Table, TableProps, Tag } from "antd";
 import {
   ColumnsType,
   FilterValue,
   SorterResult,
 } from "antd/es/table/interface";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { mockData } from "./mock_data";
 import getNamespaceFilters from "./utils";
 
 interface PodTableItemType {
-  key: string|number;
+  key: string | number;
   name: string;
   namespace: string;
   status: string;
-  image: string;
-  age: string;
+  ready: string;
+  age: number;
   restarts: number;
 }
 
 interface PodTableProps {
   style: CSSProperties;
+  currentContext: string;
 }
 
 export default function PodTable(props: PodTableProps) {
@@ -29,6 +31,27 @@ export default function PodTable(props: PodTableProps) {
   const [sortedInfo, setSortedInfo] = useState<SorterResult<PodTableItemType>>(
     {}
   );
+
+  const [podTableItems, setPodTableItems] = useState<PodTableItemType[]>([]);
+
+  useEffect(()=>{
+    async function fetchPodAsync() {
+      const podItems = await fetchPod(props.currentContext)
+      const pods: PodTableItemType[] = podItems.map((p)=>{
+        return {
+          name: p.name,
+          namespace: p.namespace,
+          key: p.namespace+ "/" + p.name,
+          status: p.status,
+          ready: `${p.readycontainers}/${p.containers}`,
+          age: p.age,
+          restarts: p.restarts,
+        }
+      })
+      setPodTableItems(pods)
+    }
+    fetchPodAsync()
+  })
 
   const handleChange: TableProps<PodTableItemType>["onChange"] = (
     pagination,
@@ -75,13 +98,13 @@ export default function PodTable(props: PodTableProps) {
       dataIndex: "status",
       key: "status",
       filters: [
-        {text: 'Running', value: 'Running'},
-        {text: 'Pending', value: 'Pending'},
-        {text: 'Succeeded', value: 'Succeeded'},
-        {text: 'Failed', value: 'Failed'},
-        {text: 'Unknown', value: 'Unknown'},
+        { text: "Running", value: "Running" },
+        { text: "Pending", value: "Pending" },
+        { text: "Succeeded", value: "Succeeded" },
+        { text: "Failed", value: "Failed" },
+        { text: "Unknown", value: "Unknown" },
       ],
-      filteredValue:filteredInfo.status || null,
+      filteredValue: filteredInfo.status || null,
       onFilter: (value: string | number | boolean, record) =>
         record.status === value.toString(),
       render: (_, { status }) => {
@@ -93,28 +116,29 @@ export default function PodTable(props: PodTableProps) {
       },
     },
     {
-        title: "Image",
-        dataIndex: 'image',
-        key: 'image',
-        sorter: (a, b) => a.image.localeCompare(b.image),
-        sortOrder: sortedInfo.columnKey === "image" ? sortedInfo.order : null,
-        ellipsis: true,
+      title: "Ready",
+      dataIndex: "ready",
+      key: "ready",
+      ellipsis: true,
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-        ellipsis: true,
-    }
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      sorter: (a, b) => {return a.age - b.age;},
+      sortOrder: sortedInfo.columnKey === "age" ? sortedInfo.order : null,
+      ellipsis: true,
+      // TODO: add render for age
+    },
   ];
 
   return (
     <Table
-        columns={columns}
-        dataSource={mockData.pods}
-        onChange={handleChange}
-        style={props.style}
-        pagination={{pageSize:8}}
+      columns={columns}
+      dataSource={podTableItems}
+      onChange={handleChange}
+      style={props.style}
+      pagination={{ pageSize: 8 }}
     />
   );
 }

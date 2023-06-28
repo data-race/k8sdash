@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
 // Same object, new types.
-const axios = setupCache(Axios);
+export const axios = setupCache(Axios);
 
 interface ContextItem {
   cluster: string;

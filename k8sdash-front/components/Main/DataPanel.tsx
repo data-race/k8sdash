@@ -7,6 +7,7 @@ interface DataPanelProps {
   openMenu: boolean;
   menuWidth: number;
   selectedResource: string;
+  currentContext: string;
 }
 
 const tableStyle = {
@@ -20,11 +21,11 @@ export default function DataPanel(props: DataPanelProps) {
   const resourceTable = ():JSX.Element => {
     switch(props.selectedResource) {
       case 'Pod':
-        return <PodTable style={tableStyle}/>
+        return <PodTable style={tableStyle} currentContext={props.currentContext}/>
       case 'Deployment':
         return <DeploymentTable style={tableStyle}/>
       default:
-        return <PodTable style={tableStyle}/>
+        return <PodTable style={tableStyle} currentContext={props.currentContext}/>
     }
   }
 

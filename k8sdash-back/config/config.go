@@ -20,6 +20,7 @@ type Config struct {
 	LogLevel             string
 	ConnectionErrorLimit int
 	KeepAlivePingTimeout time.Duration
+	KubeConfigFile       string
 }
 
 var Conf Config

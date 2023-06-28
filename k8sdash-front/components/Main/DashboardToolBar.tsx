@@ -11,9 +11,7 @@ import {
 
 import MuiAppBar from "@mui/material/AppBar";
 
-import fetchContext from "@/lib/api/context";
 import { ChevronLeft, HomeRepairService } from "@mui/icons-material";
-import { useEffect, useState } from "react";
 
 interface ToolbarProps {
   menuWidth: number;
@@ -24,6 +22,8 @@ interface ToolbarProps {
   openTerminalDrawerHandler: Function;
   closeTerminalDrawerHandler: Function;
   handleContextChange: (newContext: string) => void;
+  currentContext: string;
+  contexts: string[];
 }
 
 export default function DashboardToolbar({
@@ -35,19 +35,9 @@ export default function DashboardToolbar({
   openTerminalDrawerHandler,
   closeTerminalDrawerHandler,
   handleContextChange,
+  currentContext,
+  contexts,
 }: ToolbarProps) {
-  const [contexts, setContexts] = useState([""]);
-  const [currentContext, setCurrentContext] = useState(contexts[0])
-
-  useEffect(()=>{
-    async function fetchContextAsync() {
-      const contextItems = await fetchContext()
-      const contexts = contextItems.map((c)=>c.cluster)
-      setContexts(contexts)
-      setCurrentContext(contexts[0])
-    }
-    fetchContextAsync()
-  }, [])
 
   return (
     <Box
@@ -98,7 +88,6 @@ export default function DashboardToolbar({
                 value={currentContext}
                 label="k8s-context"
                 onChange={(e) => {
-                  setCurrentContext(e.target.value);
                   handleContextChange(e.target.value);
                 }}
               >

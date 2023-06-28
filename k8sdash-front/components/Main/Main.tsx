@@ -1,4 +1,6 @@
-import { useState } from "react";
+import fetchContext from "@/lib/api/context";
+import { useEffect, useState } from "react";
+import Loader from "../Loader";
 import DashboardToolbar from "./DashboardToolBar";
 import DataPanel from "./DataPanel";
 import ToolDrawer from "./ToolDrawer/ToolDrawer";
@@ -13,6 +15,9 @@ interface MainProps {
 
 export default function Main(props: MainProps) {
   const [openTool, setOpenTool] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [contexts, setContexts] = useState<string[]>([]);
+  const [currentContext, setCurrentContext] = useState("");
 
   const handleOpenTool = () => {
     setOpenTool(true);
@@ -21,6 +26,19 @@ export default function Main(props: MainProps) {
     setOpenTool(false);
   };
 
+  useEffect(() => {
+    async function fetchContextAsync() {
+      const contextItems = await fetchContext();
+      setContexts(contextItems.map((c) => c.cluster));
+      setCurrentContext(contextItems[0].cluster);
+      setIsLoading(false);
+    }
+    fetchContextAsync();
+  }, []);
+
+  if(isLoading) {
+    return <Loader/>
+  }
   return (
     <main>
       <div>
@@ -32,13 +50,17 @@ export default function Main(props: MainProps) {
           openTerminal={openTool}
           openTerminalDrawerHandler={handleOpenTool}
           closeTerminalDrawerHandler={handleCloseTool}
-          // TODO
-          handleContextChange={(newContext)=>{}}
+          contexts={contexts}
+          currentContext={currentContext}
+          handleContextChange={(newContext) => {
+            setCurrentContext(newContext);
+          }}
         />
         <DataPanel
           openMenu={props.openMenu}
           menuWidth={props.menuWidth}
           selectedResource={props.selectedResource}
+          currentContext={currentContext}
         />
       </div>
       <ToolDrawer

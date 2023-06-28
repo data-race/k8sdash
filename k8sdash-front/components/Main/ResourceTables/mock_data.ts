@@ -14,7 +14,7 @@ export const mockData = Mock.mock({
         'status|1': ['Running', 'Pending', 'Failed', 'Succeeded', 'Unknown'],
         'age|10-100':50,
         'restarts|0-20':10,
-        'image|3': /\w\W\s\S\d\D-/,
+        'ready': /\w\W\s\S\d\D-/,
     }],
     'deployments|15':[{
         'key|+1': 1,

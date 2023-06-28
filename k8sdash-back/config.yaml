@@ -13,3 +13,4 @@ termbuffersize: 1024
 loglevel: debug
 connectionerrorlimit: 10
 keepalivepingtimeout: 50
+kubeconfigfile: ".kube/config"
