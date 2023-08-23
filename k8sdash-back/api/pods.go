@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/data-race/k8sdash-back/utils"
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,7 @@ func ListPods(c *gin.Context) {
 	}
 	pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		c.Error(err)
+		_ = c.Error(err)
 	}
 	podItems := []myPod{}
 	for _, pod := range pods.Items {
@@ -50,7 +51,7 @@ func ListPods(c *gin.Context) {
 		}
 
 		if pod.Status.StartTime != nil {
-			podItem.Age = pod.Status.StartTime.Second()
+			podItem.Age = int(time.Since(pod.Status.StartTime.Time).Seconds())
 		}
 
 		podItems = append(podItems, podItem)
