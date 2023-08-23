@@ -7,7 +7,7 @@ interface ContextItem {
   cluster: string;
 }
 
-export default async function fetchContext(): Promise<ContextItem[]> {
+export default async function getContext(): Promise<ContextItem[]> {
   try {
     const contextItems = axios
       .get<ContextItem[]>(

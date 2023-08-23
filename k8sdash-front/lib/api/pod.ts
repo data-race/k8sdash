@@ -1,6 +1,7 @@
+import myCache from "./cache";
 import { axios } from "./context";
 
-interface PodItem {
+export interface PodItem {
   name: string;
   namespace: string;
   status: string;
@@ -10,14 +11,16 @@ interface PodItem {
   restarts: number;
 }
 
-//TODO: add cache for the fetch data functions.
-//!The function should periodically fetch data and update the cache.
-//!If the cached data is not outdated, using the cached data.
-
-export default async function fetchPod(context: string): Promise<PodItem[]> {
+export default async function getPod(context: string): Promise<PodItem[]> {
+  var uri = `http://localhost:11223/api/v1/pod?context=${context}`
+  var cachedData = myCache.get(uri);
+  if (cachedData) {
+    const podItems = cachedData.data;
+    return podItems;
+  }
   try {
     const podItems = axios.get<PodItem[]>(
-      `http://localhost:11223/api/v1/pod?context=${context}`,
+      uri,
       {
         cache: { ttl: 1000 * 30 },
       }

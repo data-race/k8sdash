@@ -1,15 +1,14 @@
-import fetchPod from "@/lib/api/pod";
-import { Table, TableProps, Tag } from "antd";
+import getPod from "@/lib/api/pod";
+import { Skeleton, Table, TableProps, Tag } from "antd";
 import {
   ColumnsType,
   FilterValue,
   SorterResult,
 } from "antd/es/table/interface";
 import { CSSProperties, useEffect, useState } from "react";
-import { mockData } from "./mock_data";
-import getNamespaceFilters from "./utils";
+import getNamespaceFilters, { ageRender } from "./utils";
 
-interface PodTableItemType {
+export interface PodTableItemType {
   key: string | number;
   name: string;
   namespace: string;
@@ -24,7 +23,7 @@ interface PodTableProps {
   currentContext: string;
 }
 
-export default function PodTable(props: PodTableProps) {
+export default function PodTable({style, currentContext}:PodTableProps) {
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
   >({});
@@ -33,10 +32,11 @@ export default function PodTable(props: PodTableProps) {
   );
 
   const [podTableItems, setPodTableItems] = useState<PodTableItemType[]>([]);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(()=>{
     async function fetchPodAsync() {
-      const podItems = await fetchPod(props.currentContext)
+      const podItems = await getPod(currentContext)
       const pods: PodTableItemType[] = podItems.map((p)=>{
         return {
           name: p.name,
@@ -49,9 +49,12 @@ export default function PodTable(props: PodTableProps) {
         }
       })
       setPodTableItems(pods)
+      setIsLoading(false)
     }
     fetchPodAsync()
-  })
+  }, [currentContext])
+
+
 
   const handleChange: TableProps<PodTableItemType>["onChange"] = (
     pagination,
@@ -77,7 +80,7 @@ export default function PodTable(props: PodTableProps) {
       title: "Namespace",
       dataIndex: "namespace",
       key: "namespace",
-      filters: getNamespaceFilters(mockData.pods),
+      filters: getNamespaceFilters(podTableItems),
       filteredValue: filteredInfo.namespace || null,
       onFilter: (value: string | number | boolean, record) =>
         record.namespace === value.toString(),
@@ -128,16 +131,24 @@ export default function PodTable(props: PodTableProps) {
       sorter: (a, b) => {return a.age - b.age;},
       sortOrder: sortedInfo.columnKey === "age" ? sortedInfo.order : null,
       ellipsis: true,
-      // TODO: add render for age
+      render: (_, { age }) => {
+        return <p>{ageRender(age)}</p>
+      },
     },
   ];
+
+  if (isLoading) {
+    return (
+      <Skeleton/>
+    );
+  }
 
   return (
     <Table
       columns={columns}
       dataSource={podTableItems}
       onChange={handleChange}
-      style={props.style}
+      style={style}
       pagination={{ pageSize: 8 }}
     />
   );

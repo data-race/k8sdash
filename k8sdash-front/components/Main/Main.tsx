@@ -1,4 +1,4 @@
-import fetchContext from "@/lib/api/context";
+import getContext from "@/lib/api/context";
 import { useEffect, useState } from "react";
 import Loader from "../Loader";
 import DashboardToolbar from "./DashboardToolBar";
@@ -28,7 +28,7 @@ export default function Main(props: MainProps) {
 
   useEffect(() => {
     async function fetchContextAsync() {
-      const contextItems = await fetchContext();
+      const contextItems = await getContext();
       setContexts(contextItems.map((c) => c.cluster));
       setCurrentContext(contextItems[0].cluster);
       setIsLoading(false);
