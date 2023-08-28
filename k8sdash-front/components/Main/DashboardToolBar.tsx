@@ -92,7 +92,7 @@ export default function DashboardToolbar({
                 }}
               >
                 {contexts.map((ctx) => (
-                  <MenuItem value={ctx}>{ctx}</MenuItem>
+                  <MenuItem value={ctx} key={ctx}>{ctx}</MenuItem>
                 ))}
               </Select>
             </FormControl>

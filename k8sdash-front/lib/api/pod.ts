@@ -11,25 +11,33 @@ export interface PodItem {
   restarts: number;
 }
 
-export default async function getPod(context: string): Promise<PodItem[]> {
-  var uri = `http://localhost:11223/api/v1/pod?context=${context}`
+export default  async function getPod(context: string): Promise<PodItem[]> {
+  // use timestamp to disable cache
+  var uri = `http://localhost:11223/api/v1/pod?context=${context}&timestamp=${new Date().getTime()}`
   var cachedData = myCache.get(uri);
   if (cachedData) {
+    console.log("Pod cache hit");
     const podItems = cachedData.data;
+    console.log(podItems);
     return podItems;
   }
+  console.log("Pod cache miss");
   try {
-    const podItems = axios.get<PodItem[]>(
+    const podItems = await axios.get<PodItem[]>(
       uri,
-      {
-        cache: { ttl: 1000 * 30 },
-      }
     ).then((resp)=>{
         return resp.data
     });
+    myCache.set(uri, podItems)
     return podItems;
   } catch (error) {
     console.error(error);
     return [];
   }
+}
+
+export function refreshPodCache(context:string) {
+  var uri = `http://localhost:11223/api/v1/pod?context=${context}`
+  myCache.remove(uri);
+  console.log("Pod cache refreshed");
 }

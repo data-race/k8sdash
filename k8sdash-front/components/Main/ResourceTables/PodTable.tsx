@@ -21,9 +21,11 @@ export interface PodTableItemType {
 interface PodTableProps {
   style: CSSProperties;
   currentContext: string;
+  triggerRefresh: boolean;
+  completeRefresh: () => void;
 }
 
-export default function PodTable({style, currentContext}:PodTableProps) {
+export default function PodTable({style, currentContext, triggerRefresh, completeRefresh}:PodTableProps) {
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
   >({});
@@ -51,8 +53,10 @@ export default function PodTable({style, currentContext}:PodTableProps) {
       setPodTableItems(pods)
       setIsLoading(false)
     }
+    console.log("PodTable: useEffect: currentContext: ", currentContext);
     fetchPodAsync()
-  }, [currentContext])
+    completeRefresh()
+  }, [completeRefresh, currentContext, triggerRefresh])
 
 
 
@@ -64,15 +68,6 @@ export default function PodTable({style, currentContext}:PodTableProps) {
     console.log("Various parameters", pagination, filters, sorter);
     setFilteredInfo(filters);
     setSortedInfo(sorter as SorterResult<PodTableItemType>);
-  };
-
-  const clearFilters = () => {
-    setFilteredInfo({});
-  };
-
-  const clearAll = () => {
-    setFilteredInfo({});
-    setSortedInfo({});
   };
 
   const columns: ColumnsType<PodTableItemType> = [
@@ -149,7 +144,7 @@ export default function PodTable({style, currentContext}:PodTableProps) {
       dataSource={podTableItems}
       onChange={handleChange}
       style={style}
-      pagination={{ pageSize: 8 }}
+      pagination={{ pageSize: 15 }}
     />
   );
 }

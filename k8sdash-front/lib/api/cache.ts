@@ -1,42 +1,34 @@
 import { PodItem } from "./pod";
 
-const TTL = 60 * 1000; // 1 minute
-
-
-export interface CacheItem {
-    timestamp: number;
+interface CacheItem {
     data: PodItem[];
+    timestamp: number;
 }
 
-export class Cache {
-    
-    // get data from cache
-    get(key: string): CacheItem|null {
-        const item = localStorage.getItem(key);
-        if (item) {
-            const parsedItem = JSON.parse(item);
-            if (parsedItem.timestamp + TTL > Date.now()) {
-                return parsedItem;
+class Cache {
+    get(key:string): CacheItem | null{
+        var item =  localStorage.getItem(key);
+        if (item != null) {
+            var cacheItem = JSON.parse(item) as CacheItem;
+            if (cacheItem.timestamp > Date.now() - 1000 * 30) {
+                return cacheItem;
             }
         }
         return null;
     }
 
-    // set data in cache
-    set(key: string, data: any) {
+    set(key:string, data:PodItem[]) {
         var item = {
-            timestamp: Date.now(),
-            data: data
+            data: data,
+            timestamp: Date.now()
         }
         localStorage.setItem(key, JSON.stringify(item));
     }
 
-    // remove data from cache
-    remove(key: string) {
+    remove(key:string) {
         localStorage.removeItem(key);
     }
 }
 
-var myCache = new Cache();
-
+const myCache = new Cache();
 export default myCache;
